@@ -69,15 +69,14 @@
                 </v-btn>
             </v-form>
         </v-card>
-        <toast ref="message"/>
+
     </v-container>
 </template>
 
 <script>
-import Toast from "./helpers/Toast.vue";
+
 export default {
     name: "Register",
-    components: {Toast},
     data() {
         return {
             collection: {},
@@ -100,9 +99,11 @@ export default {
         register() {
             this.loading.register = true
             axios.post('/api/v1/register', this.field.user).then(res => {
-                if(res.data.code===200){
+                if (res.data.code === 200) {
                     this.$refs.message.show(res.data.message)
-                }else{
+                    localStorage.setItem('user', res.data.data)
+                    location.href = '/login'
+                } else {
                     this.$refs.message.show(res.data.message, 'warning')
                 }
             }).finally(() => {
