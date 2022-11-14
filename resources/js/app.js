@@ -1,6 +1,6 @@
 import './bootstrap';
-import { createApp } from "vue/dist/vue.esm-bundler";
-
+import {createApp} from "vue/dist/vue.esm-bundler";
+import LgToast from '../components/helpers/Toast.vue'
 
 const vueApp = createApp()
 
@@ -17,13 +17,15 @@ Object.entries(components).forEach(([path, definition]) => {
 // Vuetify
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
+import {createVuetify} from 'vuetify'
 import * as VuetifyComponents from 'vuetify/components'
 import * as VuetifyDirectives from 'vuetify/directives'
 
 const vuetify = createVuetify({
     VuetifyComponents,
     VuetifyDirectives,
-    ssr:true
+    ssr: true
 })
-vueApp.use(vuetify).mount("#app")
+vueApp.use(vuetify)
+vueApp.component("LgToast", LgToast)
+vueApp.mount("#app")
