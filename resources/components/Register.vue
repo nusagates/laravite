@@ -101,7 +101,6 @@ export default {
             axios.post('/api/v1/register', this.field.user).then(res => {
                 if (res.data.code === 200) {
                     this.$refs.message.show(res.data.message)
-                    localStorage.setItem('user', res.data.data)
                     location.href = '/login'
                 } else {
                     this.$refs.message.show(res.data.message, 'warning')
