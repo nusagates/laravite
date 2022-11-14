@@ -9,7 +9,7 @@ export default defineConfig({
         vue(),
         vuetify(),
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ["resources/sass/app.scss", "resources/js/app.js"],
             refresh: true,
         }),
     ],

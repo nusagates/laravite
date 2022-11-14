@@ -81,6 +81,7 @@ export default {
                 if (res.data.code === 200) {
                     this.$refs.toast.show(res.data.message)
                     localStorage.setItem('user', JSON.stringify(res.data.data))
+                    location.href = '/user'
                 } else {
                     this.$refs.toast.show(res.data.message, 'red')
                 }

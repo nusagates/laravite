@@ -1,7 +1,7 @@
 import './bootstrap';
 import {createApp} from "vue/dist/vue.esm-bundler";
-import LgToast from '../components/helpers/Toast.vue'
-
+import permissions from "./permissions.js";
+//register vue
 const vueApp = createApp()
 
 const components = import.meta.glob('../components/*.vue', {eager: true})
@@ -27,5 +27,6 @@ const vuetify = createVuetify({
     ssr: true
 })
 vueApp.use(vuetify)
-vueApp.component("LgToast", LgToast)
+
+vueApp.use(permissions)
 vueApp.mount("#app")
