@@ -21,16 +21,12 @@ export default {
         }
     },
     methods: {
-        show(message, color = 's', duration) {
+        show(message, color, duration) {
             this.message = message
-            this.color = color == 's' ? 'green darken-4' : 'red darken-4'
-            this.duration = duration==undefined?1500:duration;
+            this.color = color === undefined ? 'success' : color
+            this.duration = duration === undefined ? 1500 : duration;
             this.visible = true
         }
     }
 }
 </script>
-
-<style scoped>
-
-</style>
