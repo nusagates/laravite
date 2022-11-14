@@ -80,7 +80,7 @@ export default {
             axios.post('/api/v1/login', this.field.user).then(res => {
                 if (res.data.code === 200) {
                     this.$refs.toast.show(res.data.message)
-                    localStorage.setItem('user', res.data.data)
+                    localStorage.setItem('user', JSON.stringify(res.data.data))
                 } else {
                     this.$refs.toast.show(res.data.message, 'red')
                 }
