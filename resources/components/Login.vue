@@ -35,34 +35,38 @@
                     variant="elevated"
                     density="comfortable"
                     @click="login"
-                >Login</v-btn>
+                >Login
+                </v-btn>
                 <v-btn class="my-2"
-                    block
-                    color="info"
-                    size="large"
-                    variant="text"
-                    density="comfortable"
+                       block
+                       color="info"
+                       size="large"
+                       variant="text"
+                       density="comfortable"
                        href="/register"
-                >Register</v-btn>
+                >Register
+                </v-btn>
             </v-form>
         </v-card>
-        <toast ref="message"/>
+        <lg-toast ref="toast"/>
     </v-container>
 </template>
 
 <script>
-import Toast from "./helpers/Toast.vue";
+
+import LgToast from "./helpers/Toast.vue";
+
 export default {
     name: "Login",
-    components: {Toast},
+    components: {LgToast},
     data() {
         return {
             collection: {},
             field: {
-                user:{
+                user: {
                     email: null,
                     password: null,
-                    showPassword:false
+                    showPassword: false
                 }
             },
             loading: {
@@ -71,16 +75,17 @@ export default {
         }
     },
     methods: {
-        login(){
-            this.loading.submit=true
-            axios.post('/api/v1/login', this.field.user).then(res=>{
-                if(res.data.code===200){
-                    this.$refs.message.show(res.data.message)
-                }else{
-                    this.$refs.message.show(res.data.message, 'warning')
+        login() {
+            this.loading.submit = true
+            axios.post('/api/v1/login', this.field.user).then(res => {
+                if (res.data.code === 200) {
+                    this.$refs.toast.show(res.data.message)
+                    localStorage.setItem('user', res.data.data)
+                } else {
+                    this.$refs.toast.show(res.data.message, 'red')
                 }
-            }).finally(()=>{
-                this.loading.submit=false
+            }).finally(() => {
+                this.loading.submit = false
             })
         }
     },
