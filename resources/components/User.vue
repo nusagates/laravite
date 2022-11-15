@@ -1,5 +1,6 @@
 <template>
     <v-container fluid>
+        <!-- Users Data -->
         <v-card>
             <v-toolbar color="success" density="compact">
                 <v-toolbar-title>Users</v-toolbar-title>
@@ -17,6 +18,7 @@
                     <tr>
                         <td>Name</td>
                         <td>Email</td>
+                        <td>Roles</td>
                         <td>Action</td>
                     </tr>
                     </thead>
@@ -26,9 +28,58 @@
                             <td v-text="item.name"/>
                             <td v-text="item.email"/>
                             <td>
+                                <template v-for="(role, index) of item.roles">
+                                    <v-chip class="mr-1 mb-1" density="compact" variant="flat" v-text="role.name"/>
+                                </template>
+                            </td>
+                            <td>
                                 <v-btn
                                     @click="editUser(item)"
                                     v-if="can('Update User')&& !item.role_names.includes('Super Admin')" icon
+                                    size="small">
+                                    <v-icon>mdi-square-edit-outline</v-icon>
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </v-table>
+            </v-card-text>
+        </v-card>
+        <!-- Roles Data -->
+        <v-card class="mt-5">
+            <v-toolbar color="success" density="compact">
+                <v-toolbar-title>Roles</v-toolbar-title>
+                <v-spacer/>
+                <v-toolbar-items>
+                    <v-btn @click="createRole" v-if="can('Add Role')" variant="text">
+                        <v-icon>mdi-plus</v-icon>
+                        Add
+                    </v-btn>
+                </v-toolbar-items>
+            </v-toolbar>
+            <v-card-text class="py-2">
+                <v-table>
+                    <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Permissions</td>
+                        <td>Action</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template v-if="collection.roles!==null" v-for="(item, index) of collection.roles.data">
+                        <tr>
+                            <td v-text="item.name"/>
+                            <td>
+                                <template v-for="(p, index) of item.permissions">
+                                    <v-chip class="mr-1 mb-1" density="compact" variant="flat" v-text="p.name"/>
+                                </template>
+                            </td>
+                            <td>
+                                <v-btn
+                                    @click="editRole(item)"
+                                    v-if="can('Update Role')" icon
                                     size="small">
                                     <v-icon>mdi-square-edit-outline</v-icon>
                                 </v-btn>
@@ -54,6 +105,9 @@
                 <v-card-text class="py-2">
                     <v-text-field variant="outlined" density="compact" label="Name" v-model="field.user.name"/>
                     <v-text-field variant="outlined" density="compact" label="Email" v-model="field.user.email"/>
+                    <v-select v-if="collection.roles!==null" multiple variant="outlined" density="compact" label="Roles"
+                              :items="collection.roles.data" item-title="name" item-value="id"
+                              v-model="field.user.roles"/>
                     <v-alert variant="text" color="red" v-if="field.user.id!==null" class="text-center">leave blank if
                         you don't want to change password
                     </v-alert>
@@ -98,6 +152,63 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <!-- Dialog Create/Edit Role -->
+        <v-dialog width="300" v-model="dialog.role.create">
+            <v-card>
+                <v-toolbar density="compact" color="success">
+                    <v-toolbar-title v-text="field.role.id===null?'Add Role':'Edit Role'"/>
+                    <v-spacer/>
+                    <v-toolbar-items>
+                        <v-btn @click="dialog.role.create=false" variant="text">
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-card-text class="py-2">
+                    <v-text-field variant="outlined" density="compact" label="Name" v-model="field.role.name"/>
+                    <v-card-title>Permission</v-card-title>
+                    <template v-if="collection.permissions!==null" v-for="(item, index) of collection.permissions">
+                        <v-checkbox density="compact" hide-details :value="item.id" :label="item.name"
+                                    v-model="field.role.permissions" multiple/>
+                    </template>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn @click="dialog.role.delete=true" color="warning" v-if="field.role.id!==null">Delete Role
+                    </v-btn>
+                    <v-spacer/>
+                    <v-btn :loading="loading.role.update" :disabled="loading.role.update" @click="updateRole"
+                           variant="flat" color="success" v-if="field.role.id!==null">Update
+                    </v-btn>
+                    <v-btn :loading="loading.role.create" :disabled="loading.role.create" @click="storeRole"
+                           variant="flat" color="success" v-if="field.role.id===null">Save
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <!-- Dialog delete role confirmation -->
+        <v-dialog width="350" v-model="dialog.role.delete">
+            <v-card>
+                <v-toolbar density="compact" color="warning">
+                    <v-toolbar-title>Confirmation</v-toolbar-title>
+                    <v-spacer/>
+                    <v-toolbar-items>
+                        <v-btn @click="dialog.role.delete=false" variant="text">
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </v-toolbar-items>
+                </v-toolbar>
+                <v-card-text class="py-2">
+                    <p>Do you want to delete this selected role?</p>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer/>
+
+                    <v-btn :loading="loading.role.delete" :disabled="loading.role.delete" @click="deleteRole"
+                           variant="flat" color="warning" v-if="field.role.id!==null">Delete
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
     <lg-toast ref="message"/>
 </template>
@@ -112,7 +223,9 @@ export default {
     data() {
         return {
             collection: {
-                users: null
+                users: null,
+                roles: null,
+                permissions: null
             },
             field: {
                 user: {
@@ -121,16 +234,31 @@ export default {
                     email: null,
                     password: null,
                     password_confirmation: null,
+                    roles: []
+                },
+                role: {
+                    id: null,
+                    name: null,
+                    permissions: []
                 }
             },
             dialog: {
                 user: {
                     create: false,
                     delete: false
+                },
+                role: {
+                    create: false,
+                    delete: false
                 }
             },
             loading: {
                 user: {
+                    create: false,
+                    delete: false,
+                    update: false,
+                },
+                role: {
                     create: false,
                     delete: false,
                     update: false,
@@ -145,6 +273,13 @@ export default {
         getUsers() {
             axios.get('/api/v1/user').then(res => {
                 this.collection.users = res.data.data
+            }).finally(() => {
+
+            })
+        },
+        getPermissions() {
+            axios.get('/api/v1/permission').then(res => {
+                this.collection.permissions = res.data.data
             }).finally(() => {
 
             })
@@ -205,6 +340,8 @@ export default {
             this.field.user.id = user.id
             this.field.user.name = user.name
             this.field.user.email = user.email
+            let roles = user.roles.map(r => r.id);
+            this.field.user.roles = roles
             this.dialog.user.create = true
         },
         deleteUser() {
@@ -221,10 +358,84 @@ export default {
             }).finally(() => {
                 this.loading.user.delete = false
             })
-        }
+        },
+        getRoles() {
+            axios.get('/api/v1/role').then(res => {
+                this.collection.roles = res.data.data
+            }).finally(() => {
+
+            })
+        },
+        createRole(showDialog = true) {
+            this.field.role = {
+                id: null,
+                name: null,
+                permissions: []
+            }
+            this.dialog.role.create = showDialog
+        },
+        storeRole() {
+            this.loading.role.create = true
+            axios.post('/api/v1/role', this.field.role).then(res => {
+                if (res.data.code === 200) {
+                    this.$refs.message.show(res.data.message)
+                    this.field.role = {
+                        id: null,
+                        name: null,
+                        permissions: []
+                    }
+                    this.dialog.role.create = false
+                    this.getRoles()
+                } else {
+                    this.$refs.message.show(res.data.message, 'warning')
+                }
+            }).finally(() => {
+                this.loading.role.create = false
+            })
+        },
+        editRole(role) {
+            let permissions = role.permissions.map(p => p.id);
+            this.field.role = {
+                id: role.id,
+                name: role.name,
+                permissions: permissions
+            }
+            this.dialog.role.create = true
+        },
+        updateRole() {
+            this.loading.role.update = true
+            axios.patch('/api/v1/role/' + this.field.role.id, this.field.role).then(res => {
+                if (res.data.code === 200) {
+                    this.$refs.message.show(res.data.message)
+                    this.createRole(false)
+                    this.getRoles()
+                } else {
+                    this.$refs.message.show(res.data.message, 'warning')
+                }
+            }).finally(() => {
+                this.loading.role.update = false
+            })
+        },
+        deleteRole() {
+            this.loading.role.delete = true
+            axios.delete('/api/v1/role/' + this.field.role.id).then(res => {
+                if (res.data.code === 200) {
+                    this.$refs.message.show(res.data.message)
+                    this.dialog.role.delete = false
+                    this.dialog.role.create = false
+                    this.getRoles()
+                } else {
+                    this.$refs.message.show(res.data.message, 'warning')
+                }
+            }).finally(() => {
+                this.loading.role.delete = false
+            })
+        },
     },
     mounted() {
         this.getUsers()
+        this.getRoles()
+        this.getPermissions()
     },
     watch: {}
 }

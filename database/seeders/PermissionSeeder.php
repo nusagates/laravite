@@ -28,9 +28,13 @@ class PermissionSeeder extends Seeder
         $user->assignRole($role);
 
         //define all permissions
-        $permissions = ["Create User", "Read User", "Update User", "Delete User"];
-        foreach ($permissions as $permission){
-            Permission::firstOrCreate(['name'=>$permission]);
+        $permissions = [
+            "Create User", "Read User", "Update User", "Delete User",
+            "Create Role", "Read Role", "Update Role", "Delete Role",
+            "Read Permission", "Assign Permission"
+        ];
+        foreach ($permissions as $permission) {
+            Permission::updateOrCreate(['name' => $permission, 'guard_name' => 'sanctum']);
         }
     }
 }

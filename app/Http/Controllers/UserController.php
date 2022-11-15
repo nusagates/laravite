@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Nusagates\Helper\Responses;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -16,7 +17,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::latest()->paginate(20);
+        $users = User::with('roles.permissions')->latest()->paginate(20);
         return Responses::showSuccessMessage('success', $users);
     }
 
@@ -43,7 +44,11 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
-
+        $roles = Role::whereIn('id', $request->roles)->get();
+        $user = $user->syncRoles($roles);
+        foreach ($roles as $role) {
+            $user->syncPermissions($role->permissions);
+        }
         return Responses::showSuccessMessage('An User has been created', $user);
     }
 
@@ -74,7 +79,12 @@ class UserController extends Controller
         if ($request->password !== null) {
             $userData['password'] = bcrypt($request->password);
         }
-        $user = $user->update($userData);
+        $user->update($userData);
+        $roles = Role::with('permissions')->whereIn('id', $request->roles)->get();
+        $user = $user->syncRoles($roles);
+        foreach ($roles as $role) {
+            $user->syncPermissions($role->permissions);
+        }
         return Responses::showSuccessMessage('User has been updated', $user);
     }
 

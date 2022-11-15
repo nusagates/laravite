@@ -3,82 +3,72 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Nusagates\Helper\Responses;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function index()
     {
-        //
+        $role = Role::with(['permissions'])->where('name', '!=', 'Super Admin')->latest()->paginate(20);
+        return Responses::showSuccessMessage('success', $role);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return array
      */
     public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $rules = [
+            'name' => 'required|string|min:3|max:20',
+        ];
+        $validation = Validator::make($request->post(), $rules);
+        if ($validation->fails()) {
+            return Responses::showValidationError($validation);
+        }
+        $role = Role::firstOrCreate(['name' => $request->name]);
+        $permissions = Permission::whereIn('id', $request->permissions)->get();
+        $role = $role->syncPermissions($permissions);
+        return Responses::showSuccessMessage('Role has been created', $role);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return array
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Role $role)
     {
-        //
+        $permissions = Permission::whereIn('id', $request->permissions)->get();
+        if($role->name!==$request->name){
+            $role->update(['name'=>$request->name]);
+        }
+        $role = $role->syncPermissions($permissions);
+        return Responses::showSuccessMessage('Role has been updated', $role);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return array
      */
-    public function destroy($id)
+    public function destroy(Role $role)
     {
-        //
+        $role->delete();
+        return Responses::showSuccessMessage('Role has ben deleted');
     }
 }
