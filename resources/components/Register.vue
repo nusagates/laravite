@@ -69,14 +69,16 @@
                 </v-btn>
             </v-form>
         </v-card>
-
+<Toast ref="message"/>
     </v-container>
 </template>
 
 <script>
 
+import Toast from "./helpers/Toast.vue";
 export default {
     name: "Register",
+    components: {Toast},
     data() {
         return {
             collection: {},

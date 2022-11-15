@@ -3,6 +3,7 @@ import User from "../components/User.vue";
 import Account from "../components/Account.vue";
 import Login from "../components/Login.vue";
 import About from "../components/About.vue";
+import Register from "../components/Register.vue";
 const routes = [
     {
         path: "/user",
@@ -23,6 +24,11 @@ const routes = [
         path: "/about",
         name: "About",
         component: About,
+    },
+    {
+        path: "/register",
+        name: "Register",
+        component: Register,
     },
 
 
