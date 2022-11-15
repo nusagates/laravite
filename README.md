@@ -17,12 +17,18 @@ This project uses the following combat tools:
 - Material Design Icon v7
 
 ## Screenshot
+*Registration Page* <br>
+![Screenshot_1](/public/assets/images/Screenshot_1.png?raw=true)
 
-![Screenshot](/public/assets/images/Screenshot_1.png?raw=true)
-![Screenshot](/public/assets/images/Screenshot_2.png?raw=true)
-![Screenshot](/public/assets/images/Screenshot_3.png?raw=true)
-![Screenshot](/public/assets/images/Screenshot_4.png?raw=true)
-![Screenshot](/public/assets/images/Screenshot_5.png?raw=true)
+*Login Page*<br>
+![Screenshot_2](/public/assets/images/Screenshot_2.png?raw=true)
+
+*User Manager*<br>
+![Screenshot_3](/public/assets/images/Screenshot_3.png?raw=true)
+*Add new Role*<br>
+![Screenshot_4](/public/assets/images/Screenshot_4.png?raw=true)
+*Update Account*<br>
+![Screenshot_5](/public/assets/images/Screenshot_5.png?raw=true)
 
 ## Installation
 
