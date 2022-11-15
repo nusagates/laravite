@@ -21,6 +21,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('logout', [AuthController::class, 'logout']);
+        Route::post('account/{user}', [AuthController::class, 'update']);
         Route::resources([
             'user' => UserController::class,
             'role' => RoleController::class,

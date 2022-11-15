@@ -1,8 +1,10 @@
 import './bootstrap';
 import {createApp} from "vue/dist/vue.esm-bundler";
 import permissions from "./permissions.js";
+import container from "../components/helpers/Container.vue";
+import routes from "./routes.js";
 //register vue
-const vueApp = createApp()
+const vueApp = createApp(container)
 
 const components = import.meta.glob('../components/*.vue', {eager: true})
 
@@ -29,4 +31,5 @@ const vuetify = createVuetify({
 vueApp.use(vuetify)
 
 vueApp.use(permissions)
+vueApp.use(routes)
 vueApp.mount("#app")

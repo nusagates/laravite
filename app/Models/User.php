@@ -13,7 +13,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    protected $appends = ['role_names', 'permission_names'];
+    protected $appends = ['role_names', 'permission_names', 'avatar'];
     /**
      * The attributes that are mass assignable.
      *
@@ -51,6 +51,10 @@ class User extends Authenticatable
     public function getPermissionNamesAttribute()
     {
         return $this->getPermissionNames();
+    }
+    public function getAvatarAttribute(){
+        $avatar = public_path('upload/avatar/'.$this->id.'.png');
+        return is_file($avatar)?url('upload/avatar/'.$this->id.'.png?'.now()->timestamp):url('assets/images/logo.png');
     }
 
 }

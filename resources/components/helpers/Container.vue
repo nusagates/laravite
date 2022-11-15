@@ -2,7 +2,7 @@
     <v-container fluid>
 
         <v-layout>
-            <v-app-bar
+            <v-app-bar v-if="user!==null"
                 color="success"
                 density="compact"
             >
@@ -18,21 +18,21 @@
 
                 <template v-slot:append>
                     <v-list-item id="menu" v-if="user!==null" density="compact"
-                                 prepend-avatar="https://randomuser.me/api/portraits/men/78.jpg">
+                                 :prepend-avatar="user.avatar">
                     </v-list-item>
                     <v-menu activator="#menu" location="bottom">
                         <v-list nav density="compact" :lines="false">
-                            <v-list-item prepend-icon="mdi-account">Account</v-list-item>
+                            <v-list-item to="/account" prepend-icon="mdi-account">Account</v-list-item>
                             <v-list-item @click="logout" class="text-red" prepend-icon="mdi-power">Logout</v-list-item>
                         </v-list>
                     </v-menu>
                 </template>
             </v-app-bar>
-            <v-navigation-drawer
+            <v-navigation-drawer v-if="user!==null"
                 v-model="drawer" permanent
             >
                 <v-list-item v-if="user!==null"
-                             prepend-avatar="https://randomuser.me/api/portraits/men/78.jpg"
+                             :prepend-avatar="user.avatar"
                              :title="user.name"
                              :subtitle="user.email"
                 ></v-list-item>
@@ -40,12 +40,12 @@
                 <v-divider></v-divider>
 
                 <v-list density="compact" nav :lines="false">
-                    <v-list-item prepend-icon="mdi-account-multiple" title="User Manager" value="home"></v-list-item>
-                    <v-list-item prepend-icon="mdi-forum" title="About" value="about"></v-list-item>
+                    <v-list-item to="/user" prepend-icon="mdi-account-multiple" title="User Manager" value="home"></v-list-item>
+                    <v-list-item to="/about" prepend-icon="mdi-forum" title="About" value="about"></v-list-item>
                 </v-list>
             </v-navigation-drawer>
             <v-main>
-                <slot name="content"/>
+                <router-view/>
             </v-main>
         </v-layout>
         <toast ref="message"/>
@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Toast from "./Toast.vue";
 
 export default {
