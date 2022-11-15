@@ -18,11 +18,11 @@ This project uses the following combat tools:
 
 ## Screenshot
 
-![Screenshot](/public/assets/images/screenshot_1.png?raw=true)
-![Screenshot](/public/assets/images/screenshot_2.png?raw=true)
-![Screenshot](/public/assets/images/screenshot_3.png?raw=true)
-![Screenshot](/public/assets/images/screenshot_4.png?raw=true)
-![Screenshot](/public/assets/images/screenshot_5.png?raw=true)
+![Screenshot](public/assets/images/screenshot_1.png?raw=true)
+![Screenshot](public/assets/images/screenshot_2.png?raw=true)
+![Screenshot](public/assets/images/screenshot_3.png?raw=true)
+![Screenshot](public/assets/images/screenshot_4.png?raw=true)
+![Screenshot](public/assets/images/screenshot_5.png?raw=true)
 
 ## Installation
 
