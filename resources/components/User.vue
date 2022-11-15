@@ -1,95 +1,100 @@
 <template>
     <v-container fluid>
-        <!-- Users Data -->
-        <v-card>
-            <v-toolbar color="success" density="compact">
-                <v-toolbar-title>Users</v-toolbar-title>
-                <v-spacer/>
-                <v-toolbar-items>
-                    <v-btn @click="createUser" v-if="can('Add User')" variant="text">
-                        <v-icon>mdi-plus</v-icon>
-                        Add
-                    </v-btn>
-                </v-toolbar-items>
-            </v-toolbar>
-            <v-card-text class="py-2">
-                <v-table>
-                    <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td>Email</td>
-                        <td>Roles</td>
-                        <td>Action</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <template v-if="collection.users!==null" v-for="(item, index) of collection.users.data">
-                        <tr>
-                            <td v-text="item.name"/>
-                            <td v-text="item.email"/>
-                            <td>
-                                <template v-for="(role, index) of item.roles">
-                                    <v-chip class="mr-1 mb-1" density="compact" variant="flat" v-text="role.name"/>
-                                </template>
-                            </td>
-                            <td>
-                                <v-btn
-                                    @click="editUser(item)"
-                                    v-if="can('Update User')&& !item.role_names.includes('Super Admin')" icon
-                                    size="small">
-                                    <v-icon>mdi-square-edit-outline</v-icon>
-                                </v-btn>
-                            </td>
-                        </tr>
-                    </template>
-                    </tbody>
-                </v-table>
-            </v-card-text>
-        </v-card>
-        <!-- Roles Data -->
-        <v-card class="mt-5">
-            <v-toolbar color="success" density="compact">
-                <v-toolbar-title>Roles</v-toolbar-title>
-                <v-spacer/>
-                <v-toolbar-items>
-                    <v-btn @click="createRole" v-if="can('Add Role')" variant="text">
-                        <v-icon>mdi-plus</v-icon>
-                        Add
-                    </v-btn>
-                </v-toolbar-items>
-            </v-toolbar>
-            <v-card-text class="py-2">
-                <v-table>
-                    <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td>Permissions</td>
-                        <td>Action</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <template v-if="collection.roles!==null" v-for="(item, index) of collection.roles.data">
-                        <tr>
-                            <td v-text="item.name"/>
-                            <td>
-                                <template v-for="(p, index) of item.permissions">
-                                    <v-chip class="mr-1 mb-1" density="compact" variant="flat" v-text="p.name"/>
-                                </template>
-                            </td>
-                            <td>
-                                <v-btn
-                                    @click="editRole(item)"
-                                    v-if="can('Update Role')" icon
-                                    size="small">
-                                    <v-icon>mdi-square-edit-outline</v-icon>
-                                </v-btn>
-                            </td>
-                        </tr>
-                    </template>
-                    </tbody>
-                </v-table>
-            </v-card-text>
-        </v-card>
+        <container>
+            <template #title>User Manager</template>
+            <template #content>
+                <!-- Users Data -->
+                <v-card>
+                    <v-toolbar color="success" density="compact">
+                        <v-toolbar-title>Users</v-toolbar-title>
+                        <v-spacer/>
+                        <v-toolbar-items>
+                            <v-btn @click="createUser" v-if="can('Add User')" variant="text">
+                                <v-icon>mdi-plus</v-icon>
+                                Add
+                            </v-btn>
+                        </v-toolbar-items>
+                    </v-toolbar>
+                    <v-card-text class="py-2">
+                        <v-table>
+                            <thead>
+                            <tr>
+                                <td>Name</td>
+                                <td>Email</td>
+                                <td>Roles</td>
+                                <td>Action</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template v-if="collection.users!==null" v-for="(item, index) of collection.users.data">
+                                <tr>
+                                    <td v-text="item.name"/>
+                                    <td v-text="item.email"/>
+                                    <td>
+                                        <template v-for="(role, index) of item.roles">
+                                            <v-chip class="mr-1 mb-1" density="compact" variant="flat"
+                                                    v-text="role.name"/>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <v-btn
+                                            @click="editUser(item)"
+                                            v-if="can('Update User')&& !item.role_names.includes('Super Admin')"
+                                            variant="text">
+                                            <v-icon>mdi-square-edit-outline</v-icon>
+                                        </v-btn>
+                                    </td>
+                                </tr>
+                            </template>
+                            </tbody>
+                        </v-table>
+                    </v-card-text>
+                </v-card>
+                <!-- Roles Data -->
+                <v-card class="mt-5">
+                    <v-toolbar color="success" density="compact">
+                        <v-toolbar-title>Roles</v-toolbar-title>
+                        <v-spacer/>
+                        <v-toolbar-items>
+                            <v-btn @click="createRole" v-if="can('Add Role')" variant="text">
+                                <v-icon>mdi-plus</v-icon>
+                                Add
+                            </v-btn>
+                        </v-toolbar-items>
+                    </v-toolbar>
+                    <v-card-text class="py-2">
+                        <v-table>
+                            <thead>
+                            <tr>
+                                <td>Name</td>
+                                <td>Permissions</td>
+                                <td>Action</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <template v-if="collection.roles!==null" v-for="(item, index) of collection.roles.data">
+                                <tr>
+                                    <td v-text="item.name"/>
+                                    <td>
+                                        <template v-for="(p, index) of item.permissions">
+                                            <v-chip class="mr-1 mb-1" density="compact" variant="flat" v-text="p.name"/>
+                                        </template>
+                                    </td>
+                                    <td>
+                                        <v-btn
+                                            @click="editRole(item)"
+                                            v-if="can('Update Role')" variant="text">
+                                            <v-icon>mdi-square-edit-outline</v-icon>
+                                        </v-btn>
+                                    </td>
+                                </tr>
+                            </template>
+                            </tbody>
+                        </v-table>
+                    </v-card-text>
+                </v-card>
+            </template>
+        </container>
         <!-- Dialog Create/Edit User -->
         <v-dialog width="500" v-model="dialog.user.create">
             <v-card>
@@ -216,10 +221,11 @@
 <script>
 import axios from "axios";
 import LgToast from "./helpers/Toast.vue";
+import Container from "./helpers/Container.vue";
 
 export default {
     name: "User",
-    components: {LgToast},
+    components: {Container, LgToast},
     data() {
         return {
             collection: {

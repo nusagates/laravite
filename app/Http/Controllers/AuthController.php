@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Nusagates\Helper\Responses;
 
 class AuthController extends Controller
 {
+    /**
+     * Handle login request by client app
+     * @param Request $request
+     * @return array
+     */
     public function login(Request $request)
     {
         $rules = [
@@ -31,6 +37,11 @@ class AuthController extends Controller
         return Responses::showSuccessMessage('Authenticated', $user);
     }
 
+    /**
+     * handing registration request by client app
+     * @param Request $request
+     * @return array
+     */
     public function register(Request $request)
     {
         $rules = [
@@ -49,5 +60,11 @@ class AuthController extends Controller
             'password' => bcrypt($request->password),
         ]);
         return Responses::showSuccessMessage("Your account has been created", $user);
+    }
+
+    public function logout()
+    {
+        $token = Auth::user()->currentAccessToken()->delete();
+        return Responses::showSuccessMessage('Successfully logged out of the app', $token);
     }
 }

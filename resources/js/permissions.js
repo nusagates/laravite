@@ -6,7 +6,6 @@ export default {
             return false
         }
         const isSuperAdmin = user.role_names.includes(SUPER_ADMIN_KEY)
-        console.log(isSuperAdmin)
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + user.token
         app.config.globalProperties.can = function (value) {
             let permissions = user.permission_names
@@ -56,5 +55,13 @@ export default {
             }
             return isSuperAdmin ? true : _return
         }
+        axios.interceptors.response.use(function (response) {
+            return response;
+        }, function (error) {
+            if (error.code === 'ERR_BAD_REQUEST') {
+                localStorage.removeItem('user')
+                location.href = '/login'
+            }
+        });
     }
 }
