@@ -73,7 +73,12 @@ class AuthController extends Controller
         return Responses::showSuccessMessage('Successfully logged out of the app', $token);
     }
 
-
+    /**
+     * update user account
+     * @param Request $request
+     * @param User $user
+     * @return array
+     */
     public function update(Request $request, User $user)
     {
         $rules = [
@@ -100,9 +105,20 @@ class AuthController extends Controller
                 mkdir($path, 0777, true);
             }
             $img = Image::make($request->avatar);
-            $img->save($path . $user->id.'.png');
+            $img->save($path . $user->id . '.png');
         }
         $user['token'] = $request->bearerToken();
         return Responses::showSuccessMessage('Account has been updated', $user);
+    }
+
+    /**
+     * update roles and permissions
+     * @return array
+     */
+    public function auth(Request $request)
+    {
+        $user = Auth::user();
+        $user['token'] = $request->bearerToken();
+        return Responses::showSuccessMessage('Authenticated', $user);
     }
 }

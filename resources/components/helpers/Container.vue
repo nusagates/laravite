@@ -54,6 +54,8 @@
 
 <script>
 import Toast from "./Toast.vue";
+import axios from "axios";
+import {mapGetters} from "vuex";
 
 export default {
     name: "Container",
@@ -61,7 +63,6 @@ export default {
     data() {
         return {
             drawer: true,
-            user: JSON.parse(localStorage.getItem('user'))
         }
     },
     methods: {
@@ -75,7 +76,22 @@ export default {
                    }, 1000)
                 }
             })
-        }
+        },
+        auth() {
+            axios.post('/api/v1/user/auth').then(res => {
+                if (res.data.code === 200) {
+                    this.$store.commit('setUser', res.data.data)
+                }else{
+                    this.$refs.message.show(res.data.message, 'warning')
+                }
+            })
+        },
+    },
+    mounted() {
+        this.auth()
+    },
+    computed:{
+        ...mapGetters(['user']),
     }
 }
 </script>

@@ -59,8 +59,8 @@ export default {
             return response;
         }, function (error) {
             if (error.code === 'ERR_BAD_REQUEST') {
-                localStorage.removeItem('user')
-                location.href = '/login'
+                //localStorage.removeItem('user')
+                //location.href = '/login'
             }
         });
     }

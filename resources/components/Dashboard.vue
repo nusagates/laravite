@@ -11,6 +11,7 @@
 
 <script>
 import Container from "./helpers/Container.vue";
+import axios from "axios";
 export default {
     name: "Dashboard",
     components: {Container},
@@ -25,8 +26,10 @@ export default {
             table: {},
         }
     },
-    methods: {},
+    methods: {
+    },
     mounted() {
+
     },
     watch: {}
 }

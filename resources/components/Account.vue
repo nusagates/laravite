@@ -39,6 +39,7 @@
 <script>
 import Container from "./helpers/Container.vue";
 import Toast from "./helpers/Toast.vue";
+import {mapGetters} from "vuex";
 
 
 export default {
@@ -89,11 +90,12 @@ export default {
         },
         updateUser() {
             this.loading.user.update = true
-            axios.post('/api/v1/account/'+this.field.user.id, this.field.user).then(res => {
+            axios.post('/api/v1/account/' + this.field.user.id, this.field.user).then(res => {
                 if (res.data.code === 200) {
                     localStorage.setItem('user', JSON.stringify(res.data.data))
+                    this.$store.commit('setUser', res.data.data)
                     this.$refs.message.show(res.data.message)
-                }else{
+                } else {
                     this.$refs.message.show(res.data.message, 'warning')
                 }
             }).finally(() => {
@@ -101,12 +103,15 @@ export default {
             })
         }
     },
-    mounted() {
-        let user = JSON.parse(localStorage.getItem('user'))
-        if (user === null) return
-        this.field.user.id = user.id
-        this.field.user.name = user.name
-        this.field.user.email = user.email
+    computed: {
+        ...mapGetters(['user']),
+    },
+    watch: {
+        user: function (user) {
+            this.field.user.id = user.id
+            this.field.user.name = user.name
+            this.field.user.email = user.email
+        }
     }
 }
 </script>

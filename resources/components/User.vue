@@ -24,7 +24,7 @@
                     </thead>
                     <tbody>
                     <template v-if="collection.users!==null" v-for="(item, index) of collection.users.data">
-                        <tr>
+                        <tr v-if="!item.role_names.includes('Super Admin')">
                             <td v-text="item.name"/>
                             <td v-text="item.email"/>
                             <td>
@@ -36,7 +36,7 @@
                             <td>
                                 <v-btn
                                     @click="editUser(item)"
-                                    v-if="can('Update User')&& !item.role_names.includes('Super Admin')"
+                                    v-if="can('Update User')&& item.id!==user.id"
                                     variant="text">
                                     <v-icon>mdi-square-edit-outline</v-icon>
                                 </v-btn>
@@ -217,7 +217,7 @@
 import axios from "axios";
 import LgToast from "./helpers/Toast.vue";
 import Container from "./helpers/Container.vue";
-
+import { mapGetters} from 'vuex';
 export default {
     name: "User",
     components: {Container, LgToast},
@@ -265,12 +265,19 @@ export default {
                     update: false,
                 }
             },
-            selected: {},
-            option: {},
-            table: {},
         }
     },
     methods: {
+        auth() {
+            axios.post('/api/v1/user/auth').then(res => {
+                console.log(res.data)
+                if (res.data.code === 200) {
+                    localStorage.setItem('user', JSON.stringify(res.data.data))
+                }else{
+                    this.$refs.message.show(res.data.message, 'warning')
+                }
+            })
+        },
         getUsers() {
             axios.get('/api/v1/user').then(res => {
                 this.collection.users = res.data.data
@@ -408,6 +415,7 @@ export default {
             axios.patch('/api/v1/role/' + this.field.role.id, this.field.role).then(res => {
                 if (res.data.code === 200) {
                     this.$refs.message.show(res.data.message)
+                    this.auth()
                     this.createRole(false)
                     this.getRoles()
                 } else {
@@ -438,7 +446,9 @@ export default {
         this.getRoles()
         this.getPermissions()
     },
-    watch: {}
+    computed:{
+        ...mapGetters(['user']),
+    }
 }
 </script>
 

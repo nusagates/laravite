@@ -3,6 +3,7 @@ import {createApp} from "vue/dist/vue.esm-bundler";
 import permissions from "./permissions.js";
 import container from "../components/helpers/Container.vue";
 import routes from "./routes.js";
+import store from "./stores.js";
 
 //register vue
 const vueApp = createApp(container)
@@ -27,6 +28,7 @@ const vuetify = createVuetify({
 })
 
 vueApp.use(vuetify)
+vueApp.use(store)
 vueApp.use(permissions)
 vueApp.use(routes)
 vueApp.mount("#app")

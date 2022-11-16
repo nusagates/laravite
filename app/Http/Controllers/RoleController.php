@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Nusagates\Helper\Responses;
@@ -52,11 +53,20 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+
         $permissions = Permission::whereIn('id', $request->permissions)->get();
-        if($role->name!==$request->name){
-            $role->update(['name'=>$request->name]);
+        if ($role->name !== $request->name) {
+            $role->update(['name' => $request->name]);
         }
         $role = $role->syncPermissions($permissions);
+
+        //update user permissions besides on their roles
+        $users = User::role($role)->get();
+        foreach ($users as $user) {
+            foreach ($user->roles as $userRole) {
+                $user->syncPermissions($userRole->permissions);
+            }
+        }
         return Responses::showSuccessMessage('Role has been updated', $role);
     }
 

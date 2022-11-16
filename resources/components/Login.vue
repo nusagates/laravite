@@ -35,6 +35,8 @@
                     variant="elevated"
                     density="comfortable"
                     @click="login"
+                    :disabled="loading.submit"
+                    :loading="loading.submit"
                 >Login
                 </v-btn>
                 <v-btn class="my-2"
