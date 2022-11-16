@@ -16,6 +16,10 @@ This project uses the following combat tools:
 - Vuetify v3
 - Material Design Icon v7
 
+## Screencast
+
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/IcrqdpMc4LQ/0.jpg)](http://www.youtube.com/watch?v=IcrqdpMc4LQ "Laragates Demo")
+
 ## Screenshot
 *Registration Page* <br>
 ![Screenshot_1](/public/assets/images/Screenshot_1.png?raw=true)
@@ -61,13 +65,24 @@ Generate APP key
 ```bash
 php artisan key:generate
 ```
+Add dummy data and required role & permissions
 
+```bash
+php artisan db:seed
+```
 Start development.
 
 ```bash
 npm run dev
 ```
 
+## Auth Credentials
+An user created by default is:<br>
+email: <code>nusagates@gmail.com</code><br>
+pass: <code>123456</code>
+
+Registration url: <code>baseurl/register</code><br>
+Login url: <code>baseurl/login</code><br>
 ## Support
 
 If there are problems or questions, please contact us via
