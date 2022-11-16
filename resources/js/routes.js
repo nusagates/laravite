@@ -1,38 +1,12 @@
 import { createWebHistory, createRouter } from "vue-router";
-import User from "../components/User.vue";
-import Account from "../components/Account.vue";
-import Login from "../components/Login.vue";
-import About from "../components/About.vue";
-import Register from "../components/Register.vue";
-const routes = [
-    {
-        path: "/user",
-        name: "User",
-        component: User,
-    },
-    {
-        path: "/account",
-        name: "Account",
-        component: Account,
-    },
-    {
-        path: "/login",
-        name: "Login",
-        component: Login,
-    },
-    {
-        path: "/about",
-        name: "About",
-        component: About,
-    },
-    {
-        path: "/register",
-        name: "Register",
-        component: Register,
-    },
 
-
-];
+//auto register components to vue router
+const components = import.meta.glob('../components/*.vue', {eager: true})
+let routes =[]
+Object.entries(components).forEach(([path, definition]) => {
+    const componentName = path.split('/').pop().replace(/\.\w+$/, '')
+    routes.push({path:'/'+componentName.toLowerCase(), name:componentName, component:() =>import(`../components/${componentName}.vue`)})
+})
 
 const router = createRouter({
     history: createWebHistory(),
