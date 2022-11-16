@@ -18,7 +18,7 @@ This project uses the following combat tools:
 
 ## Screencast
 
-<video src='http://www.youtube.com/watch?v=IcrqdpMc4LQ'/>
+<video src='http://www.youtube.com/watch?v=IcrqdpMc4LQ'></video>
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/IcrqdpMc4LQ/0.jpg)](http://www.youtube.com/watch?v=IcrqdpMc4LQ "Laragates Demo")
 
