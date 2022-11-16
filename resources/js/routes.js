@@ -2,7 +2,9 @@ import { createWebHistory, createRouter } from "vue-router";
 
 //auto register components to vue router
 const components = import.meta.glob('../components/*.vue', {eager: true})
-let routes =[]
+let routes =[
+    {path:'/', name: 'Home', component: ()=> import('../components/About.vue')}
+]
 Object.entries(components).forEach(([path, definition]) => {
     const componentName = path.split('/').pop().replace(/\.\w+$/, '')
     routes.push({path:'/'+componentName.toLowerCase(), name:componentName, component:() =>import(`../components/${componentName}.vue`)})

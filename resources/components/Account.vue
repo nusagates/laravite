@@ -106,6 +106,14 @@ export default {
     computed: {
         ...mapGetters(['user']),
     },
+    mounted() {
+        let user = this.$store.state.user
+        if(user!==null){
+            this.field.user.id = user.id
+            this.field.user.name = user.name
+            this.field.user.email = user.email
+        }
+    },
     watch: {
         user: function (user) {
             this.field.user.id = user.id
